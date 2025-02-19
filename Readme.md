@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Milena Letz](https://up.htmlacademy.ru/javascript-individual/2/user/2518049).
-* Наставник: `Неизвестно`.
+* Наставник: [Елизавета Махоткина](https://htmlacademy.ru/profile/id1472547).
 
 ---
 
