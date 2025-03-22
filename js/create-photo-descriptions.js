@@ -1,4 +1,4 @@
-import { createPhotoComment } from './create-photo-comment';
+import { createPhotoComment } from './create-photo-comments';
 import { PHOTO_DESCRIPTIONS_COUNT, DESCRIPTIONS, MESSAGES, NAMES, SURNAMES, likesCount, commentsCount, avatarIndex } from './data';
 import { getRandomNumber } from './utils';
 

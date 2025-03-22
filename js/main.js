@@ -1,4 +1,4 @@
-import { photoDesciptions } from './create-photo-description';
+import { photoDesciptions } from './create-photo-descriptions';
 
 photoDesciptions.slice();
 
