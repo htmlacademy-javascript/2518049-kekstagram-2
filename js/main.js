@@ -1,4 +1,1 @@
-import { photoDesciptions } from './create-photo-descriptions';
-
-photoDesciptions.slice();
-
+import './draw-photos';
