@@ -5,7 +5,7 @@ let globalCommentId = 1;
 const createPhotoComment = (MESSAGES, NAMES, SURNAMES, avatarIndex) =>
   function () {
     return {
-      id: globalCommentId++,
+      commentId: globalCommentId++,
       avatar: `img/avatar-${getRandomNumber(avatarIndex.MIN, avatarIndex.MAX)}.svg`,
       message: `${getArrayItem(MESSAGES)}`,
       name: `${getArrayItem(NAMES)} ${getArrayItem(SURNAMES)}`
