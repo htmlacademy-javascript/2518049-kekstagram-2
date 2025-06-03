@@ -15,14 +15,14 @@ const createPhotoModal = (url, description, likes, comments) => {
   photoModalCaption.textContent = description;
   photoModalLikesCount.textContent = likes;
   photoModalCommentsTotal.textContent = comments.length;
-  for (let i = 0; i < comments.length; i++) {
-    const {avatar, message, name} = comments[i];
+  comments.forEach((comment) => {
+    const {avatar, message, name} = comment;
     const newComment = commentTemplate.cloneNode(true);
     newComment.querySelector('.social__picture').src = avatar;
     newComment.querySelector('.social__picture').alt = name;
     newComment.querySelector('.social__text').textContent = message;
     commentFragment.appendChild(newComment);
-  }
+  });
   commentBlock.innerHTML = '';
   commentBlock.appendChild(commentFragment);
 };

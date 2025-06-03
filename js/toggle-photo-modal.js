@@ -8,19 +8,21 @@ const photoModalCloseButton = photoModal.querySelector('.big-picture__cancel');
 const commentsCountBlock = photoModal.querySelector('.social__comment-count');
 const commentsLoader = photoModal.querySelector('.comments-loader');
 
+const onDocumentKeydown = (evt) => {
+  if(isEscapeKey(evt)) {
+    evt.preventDefault();
+    photoModal.classList.add('hidden');
+    pageBody.classList.remove('modal-open');
+  }
+};
+
 const openPhotoModal = () => {
   photoModal.classList.remove('hidden');
   commentsCountBlock.classList.add('hidden');
   commentsLoader.classList.add('hidden');
   pageBody.classList.add('modal-open');
 
-  document.addEventListener('keydown', (evt) => {
-    if(isEscapeKey(evt)) {
-      evt.preventDefault();
-      photoModal.classList.add('hidden');
-      pageBody.classList.remove('modal-open');
-    }
-  });
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const closePhotoModal = () => {
@@ -29,13 +31,7 @@ const closePhotoModal = () => {
   commentsLoader.classList.remove('hidden');
   pageBody.classList.remove('modal-open');
 
-  document.removeEventListener('keydown', (evt) => {
-    if(isEscapeKey(evt)) {
-      evt.preventDefault();
-      photoModal.classList.add('hidden');
-      pageBody.classList.remove('modal-open');
-    }
-  });
+  document.removeEventListener('keydown', onDocumentKeydown);
 };
 
 photoModalCloseButton.addEventListener('click', () => {
