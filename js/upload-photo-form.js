@@ -28,7 +28,7 @@ const validateHashtags = (value) => {
   const inputValue = value.toLowerCase().trim();
   const hashtagsArray = inputValue.split(/\s+/);
   const correctLength = hashtagsArray.length <= MAX_HASHTAG_COUNT;
-  const isUnique = !hashtagsArray.slice(0, hashtagsArray.length - 1).includes(hashtagsArray[hashtagsArray.length - 1]);
+  const uniqueHashArray = new Set(hashtagsArray);
 
   if (inputValue.length === 0) {
     return true;
@@ -52,7 +52,7 @@ const validateHashtags = (value) => {
     }
   }
 
-  if (!isUnique) {
+  if (hashtagsArray.length !== uniqueHashArray.size) {
     errorMessage = 'Такой хэштег уже существует';
     return false;
   }
