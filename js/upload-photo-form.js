@@ -28,33 +28,36 @@ const validateHashtags = (value) => {
   const inputValue = value.toLowerCase().trim();
   const hashtagsArray = inputValue.split(/\s+/);
   const correctLength = hashtagsArray.length <= MAX_HASHTAG_COUNT;
-  const containsOnlyHash = hashtagsArray.some((hashtag) => hashtag === '#');
-  const isWhitespaceMissing = hashtagsArray.some((hashtag) => hashtag.slice(1).includes('#'));
-  const isMatchingRegExp = hashtagsArray.every((hashtag) => hashtagTemplate.test(hashtag));
   const isUnique = !hashtagsArray.slice(0, hashtagsArray.length - 1).includes(hashtagsArray[hashtagsArray.length - 1]);
 
-  if(inputValue.length === 0) {
+  if (inputValue.length === 0) {
     return true;
   }
 
-  if(!correctLength) {
+  if (!correctLength) {
     errorMessage = `Нельзя указать больше ${MAX_HASHTAG_COUNT} хэштегов`;
     return false;
-  } else if (containsOnlyHash) {
-    errorMessage = 'Хештег не может состоять только из одной решётки';
-    return false;
-  } else if (isWhitespaceMissing) {
-    errorMessage = 'Хэштеги разделяются пробелами';
-    return false;
-  } else if(!isMatchingRegExp) {
-    errorMessage = 'Хэштег должен состоять из символа # и макс. 19 букв и чисел';
-    return false;
-  } else if(!isUnique) {
+  }
+
+  for (const hashtag of hashtagsArray) {
+    if (hashtag === '#') {
+      errorMessage = 'Хештег не может состоять только из одной решётки';
+      return false;
+    } else if (hashtag.slice(1).includes('#')) {
+      errorMessage = 'Хэштеги разделяются пробелами';
+      return false;
+    } else if (!hashtagTemplate.test(hashtag)) {
+      errorMessage = 'Хэштег должен начинаться с # и содержать до 19 букв или цифр';
+      return false;
+    }
+  }
+
+  if (!isUnique) {
     errorMessage = 'Такой хэштег уже существует';
     return false;
   }
 
-  return correctLength && isMatchingRegExp && isUnique;
+  return true;
 };
 pristine.addValidator(photoHashtags, validateHashtags, () => errorMessage);
 
