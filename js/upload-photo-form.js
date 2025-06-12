@@ -1,5 +1,6 @@
 import { closeFormModal, openFormModal } from './toggle-form-modal';
 import { isEscapeKey } from './utils';
+import { adjustEffect } from './photo-editing';
 
 const pageBody = document.querySelector('body');
 
@@ -10,7 +11,13 @@ const photoEditorModalCloseButton = photoEditorModal.querySelector('.img-upload_
 
 const photoHashtags = photoUploadForm.querySelector('.text__hashtags');
 const photoDescription = photoUploadForm.querySelector('.text__description');
+
+const photoScaleValue = photoEditorModal.querySelector('.scale__control--value');
+const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
+const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
 const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
+const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
+const nonEffectElement = photoEditorModal.querySelector('#effect-none');
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -69,11 +76,23 @@ photoUploadForm.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
+effectElements.forEach((element) => {
+  element.addEventListener('change', adjustEffect);
+});
+
 const resetForm = () => {
   photoUploadElement.value = '';
   photoHashtags.value = '';
   photoDescription.value = '';
+
+  photoScaleValue.value = '100%';
+  photoPreview.style.transform = 'scale(1)';
+
+  photoEffectContainer.classList.add('hidden');
   photoEffectLevelElement.value = '';
+  photoPreview.style.filter = 'none';
+  nonEffectElement.checked = true;
+
   pristine.reset();
 };
 
