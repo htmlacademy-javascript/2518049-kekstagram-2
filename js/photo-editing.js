@@ -7,7 +7,6 @@ let photoScaleNumericValue = parseInt(photoScaleValue.value.replace('%', ''), 10
 const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
 
 const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
-photoEffectContainer.classList.add('hidden');
 const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
 const photoEffectSlider = photoEditorModal.querySelector('.effect-level__slider');
 const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
@@ -15,6 +14,8 @@ const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
 const MAX_SCALE = 100;
 const MIN_SCALE = 25;
 const SCALE_STEP = 25;
+
+photoEffectContainer.classList.add('hidden');
 
 photoScaleSmaller.addEventListener('click', () => {
   if (photoScaleNumericValue > MIN_SCALE) {
@@ -78,7 +79,7 @@ const changeEffectLevel = (filter) => {
 
 const adjustEffect = () => {
   for(const effectElement of effectElements) {
-    if (effectElement.checked === true) {
+    if (effectElement.checked) {
       switch (effectElement.value) {
         case 'none' : {
           photoEffectContainer.classList.add('hidden');
@@ -116,7 +117,6 @@ const adjustEffect = () => {
           break;
         }
       }
-      return false;
     }
   }
 };
