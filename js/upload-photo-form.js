@@ -1,5 +1,6 @@
 import { closeFormModal, openFormModal } from './toggle-form-modal';
 import { isEscapeKey } from './utils';
+import { adjustEffect } from './photo-editing';
 
 const pageBody = document.querySelector('body');
 
@@ -10,10 +11,22 @@ const photoEditorModalCloseButton = photoEditorModal.querySelector('.img-upload_
 
 const photoHashtags = photoUploadForm.querySelector('.text__hashtags');
 const photoDescription = photoUploadForm.querySelector('.text__description');
+
+const photoScaleSmaller = photoEditorModal.querySelector('.scale__control--smaller');
+const photoScaleBigger = photoEditorModal.querySelector('.scale__control--bigger');
+const photoScaleValue = photoEditorModal.querySelector('.scale__control--value');
+let photoScaleNumericValue = parseInt(photoScaleValue.value.replace('%', ''), 10);
+const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
+const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
 const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
+const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
+const nonEffectElement = photoEditorModal.querySelector('#effect-none');
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
+const MAX_SCALE = 100;
+const MIN_SCALE = 25;
+const SCALE_STEP = 25;
 
 let errorMessage;
 
@@ -69,11 +82,44 @@ photoUploadForm.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
+effectElements.forEach((element) => {
+  element.addEventListener('change', adjustEffect);
+});
+
+photoScaleSmaller.addEventListener('click', () => {
+  if (photoScaleNumericValue > MIN_SCALE) {
+    photoScaleNumericValue -= SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
+  }
+});
+
+photoScaleBigger.addEventListener('click', () => {
+  if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP < MAX_SCALE - photoScaleNumericValue) {
+    photoScaleNumericValue += SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
+  } else if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP >= MAX_SCALE - photoScaleNumericValue) {
+    photoScaleNumericValue += SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = 'scale(1)';
+  }
+});
+
 const resetForm = () => {
   photoUploadElement.value = '';
   photoHashtags.value = '';
   photoDescription.value = '';
+
+  photoScaleNumericValue = 100;
+  photoScaleValue.value = '100%';
+  photoPreview.style.transform = 'scale(1)';
+
+  photoEffectContainer.classList.add('hidden');
   photoEffectLevelElement.value = '';
+  photoPreview.style.filter = 'none';
+  nonEffectElement.checked = true;
+
   pristine.reset();
 };
 
