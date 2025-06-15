@@ -1,7 +1,9 @@
+import { showMessage } from './utils';
+
 const BASE_URL = 'https://31.javascript.htmlacademy.pro/kekstagram';
 
 const dataErrorBlock = document.querySelector('#data-error').content.querySelector('.data-error');
-
+const successBlock = document.querySelector('#success').content.querySelector('.success');
 const errorBlock = document.querySelector('#error').content.querySelector('.error');
 
 const getData = (onSuccess) => fetch(`${BASE_URL}/data`)
@@ -20,21 +22,16 @@ const getData = (onSuccess) => fetch(`${BASE_URL}/data`)
   });
 
 
-const sendData = (body) => fetch(`${BASE_URL}`, {
-  method: 'POST',
-  credentials: 'same-origin',
-  headers: {
-    'Content-type': 'multipart/form-data'
-  },
-  body
-})
+const sendData = (body) => fetch(`${BASE_URL}`, {method: 'POST', body})
   .then((response) => {
     if(!response.ok) {
       throw new Error();
     }
+    showMessage(successBlock);
   })
   .catch(() => {
-    document.body.append(errorBlock);
+    showMessage(errorBlock);
+    throw new Error();
   });
 
 export {getData, sendData};

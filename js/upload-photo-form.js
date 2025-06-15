@@ -78,17 +78,6 @@ pristine.addValidator(photoHashtags, validateHashtags, () => errorMessage);
 const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 pristine.addValidator(photoDescription, validateComment, `Нельзя вводить больше ${MAX_COMMENT_LENGTH} символов`);
 
-const setPhotoFormSubmit = (onSuccess) => {
-  photoUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if(pristine.validate()) {
-      sendData(new FormData(evt.target))
-        .then(onSuccess)
-        .catch();
-    }
-  });
-};
-
 effectElements.forEach((element) => {
   element.addEventListener('change', adjustEffect);
 });
@@ -148,5 +137,17 @@ photoUploadElement.addEventListener('change', () => {
 photoEditorModalCloseButton.addEventListener('click', () => {
   closeFormModal(resetForm, onDocumentKeydown);
 });
+
+const setPhotoFormSubmit = () => {
+  photoUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if(pristine.validate()) {
+      sendData(new FormData(evt.target))
+        .then(() => {
+          closeFormModal(resetForm, onDocumentKeydown);
+        });
+    }
+  });
+};
 
 export {setPhotoFormSubmit, resetForm, onDocumentKeydown};
