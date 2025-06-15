@@ -9,4 +9,23 @@ const getArrayItem = (elements) => elements[getRandomNumber(0, elements.length -
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomNumber, getArrayItem, isEscapeKey};
+const showMessage = (message) => {
+  document.body.append(message);
+  message.querySelector('button').addEventListener('click', () => {
+    message.remove();
+  });
+  document.addEventListener('click', (evt) => {
+    const isClickInside = message.querySelector('div').contains(evt.target);
+    if(!isClickInside) {
+      message.remove();
+    }
+  });
+  document.addEventListener('keydown', (evt) => {
+    if(isEscapeKey(evt)) {
+      evt.preventDefault();
+      message.remove();
+    }
+  });
+};
+
+export {getRandomNumber, getArrayItem, isEscapeKey, showMessage};
