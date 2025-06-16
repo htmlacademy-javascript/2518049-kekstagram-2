@@ -124,9 +124,12 @@ const onDocumentKeydown = (evt) => {
     evt.stopPropagation();
   } else if(isEscapeKey(evt)) {
     evt.preventDefault();
-    photoEditorModal.classList.add('hidden');
-    pageBody.classList.remove('modal-open');
-    resetForm();
+    const messageOpen = document.contains(document.querySelector('.error'));
+    if(!messageOpen) {
+      photoEditorModal.classList.add('hidden');
+      pageBody.classList.remove('modal-open');
+      resetForm();
+    }
   }
 };
 
