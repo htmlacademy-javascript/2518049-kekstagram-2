@@ -9,9 +9,9 @@ const randomFilterButton = document.querySelector('#filter-random');
 const discussedFilterButton = document.querySelector('#filter-discussed');
 
 const RANDOM_PHOTOS_COUNT = 10;
-const PHOTOS_COUNT = 25;
 const DEBOUNCE_DELAY = 500;
 
+let photosCount;
 let uniqueIds;
 
 const sortPhotosByDiscussed = (photoA, photoB) => photoB.comments.length - photoA.comments.length;
@@ -20,6 +20,7 @@ const filterById = (photoId) => uniqueIds.has(photoId);
 
 getData()
   .then((photos) => {
+    photosCount = photos.length;
     renderPhotos(photos);
     onFilterButtonClick(
       defaultFilterButton,
@@ -28,7 +29,7 @@ getData()
     onFilterButtonClick(
       randomFilterButton,
       debounce(() => {
-        uniqueIds = getUniqueNumbersSet(0, PHOTOS_COUNT, RANDOM_PHOTOS_COUNT);
+        uniqueIds = getUniqueNumbersSet(0, photosCount, RANDOM_PHOTOS_COUNT);
         renderPhotos(photos.filter((photo) => filterById(photo.id)));
       }, DEBOUNCE_DELAY)
     );
