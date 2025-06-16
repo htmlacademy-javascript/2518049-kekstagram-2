@@ -1,3 +1,4 @@
+import './photo-preview';
 import { getData } from './api';
 import { renderPhotos } from './render-photos';
 import { setPhotoFormSubmit } from './upload-photo-form';
