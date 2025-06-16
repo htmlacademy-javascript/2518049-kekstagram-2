@@ -6,14 +6,16 @@ const dataErrorBlock = document.querySelector('#data-error').content.querySelect
 const successBlock = document.querySelector('#success').content.querySelector('.success');
 const errorBlock = document.querySelector('#error').content.querySelector('.error');
 
-const getData = (onSuccess) => fetch(`${BASE_URL}/data`)
+
+const getData = () => fetch(`${BASE_URL}/data`)
   .then((response) => {
     if (!response.ok) {
       throw new Error();
     }
+    const filters = document.querySelector('.img-filters');
+    filters.classList.remove('img-filters--inactive');
     return response.json();
   })
-  .then((photos) => onSuccess(photos))
   .catch(() => {
     document.body.append(dataErrorBlock);
     setTimeout(() => {
