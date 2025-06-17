@@ -5,6 +5,7 @@ import { sendData } from './api';
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
+const MAX_TRASFORM_SCALE = 1;
 const MAX_SCALE = 100;
 const MIN_SCALE = 25;
 const SCALE_STEP = 25;
@@ -50,7 +51,7 @@ photoScaleBigger.addEventListener('click', () => {
   } else if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP >= MAX_SCALE - photoScaleNumericValue) {
     photoScaleNumericValue += SCALE_STEP;
     photoScaleValue.value = `${photoScaleNumericValue}%`;
-    photoPreview.style.transform = 'scale(1)';
+    photoPreview.style.transform = `scale(${MAX_TRASFORM_SCALE})`;
   }
 });
 
@@ -120,9 +121,9 @@ const resetForm = () => {
   photoHashtags.value = '';
   photoDescription.value = '';
 
-  photoScaleNumericValue = 100;
-  photoScaleValue.value = '100%';
-  photoPreview.style.transform = 'scale(1)';
+  photoScaleNumericValue = MAX_SCALE;
+  photoScaleValue.value = `${MAX_SCALE}%`;
+  photoPreview.style.transform = `scale(${MAX_TRASFORM_SCALE})`;
 
   photoEffectContainerElement.classList.add('hidden');
   photoEffectLevelElement.value = '';

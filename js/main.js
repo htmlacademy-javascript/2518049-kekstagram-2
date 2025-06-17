@@ -5,6 +5,7 @@ import { setPhotoFormSubmit } from './upload-photo-form';
 import { onFilterButtonClick} from './filter-handling';
 import { debounce, getUniqueNumbersSet } from './utils';
 
+const MIN_VALUE_UNIQUE_NUMBERS = 0;
 const RANDOM_PHOTOS_COUNT = 10;
 const DEBOUNCE_DELAY = 500;
 
@@ -30,7 +31,7 @@ getData()
     onFilterButtonClick(
       randomFilterButton,
       debounce(() => {
-        uniqueIds = getUniqueNumbersSet(0, photosCount, RANDOM_PHOTOS_COUNT);
+        uniqueIds = getUniqueNumbersSet(MIN_VALUE_UNIQUE_NUMBERS, photosCount, RANDOM_PHOTOS_COUNT);
         renderPhotos(photos.filter((photo) => filterById(photo.id)));
       }, DEBOUNCE_DELAY)
     );

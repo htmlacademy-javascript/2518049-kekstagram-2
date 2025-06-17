@@ -5,7 +5,7 @@ const getRandomNumber = (min, max) => {
   return Math.floor(result);
 };
 
-const getUniqueNumbersSet = (min = 0, max = 25, numbersCount = 10) => {
+const getUniqueNumbersSet = (min, max, numbersCount) => {
   const numbersSet = new Set();
   while (numbersSet.size < numbersCount) {
     numbersSet.add(getRandomNumber(min, max));

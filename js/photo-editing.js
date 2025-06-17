@@ -1,3 +1,31 @@
+const EffectsValues = {
+  CHROME: {
+    MIN: 0,
+    MAX: 1,
+    STEP: 0.1
+  },
+  SEPIA: {
+    MIN: 0,
+    MAX: 1,
+    STEP: 0.1
+  },
+  MARVIN: {
+    MIN: 0,
+    MAX: 100,
+    STEP: 1
+  },
+  PHOBOS: {
+    MIN: 0,
+    MAX: 3,
+    STEP: 0.1
+  },
+  HEAT: {
+    MIN: 1,
+    MAX: 3,
+    STEP: 0.1
+  },
+};
+
 const photoEditorModal = document.querySelector('.img-upload__overlay');
 
 const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
@@ -11,11 +39,11 @@ photoEffectContainerElement.classList.add('hidden');
 
 noUiSlider.create(photoEffectSliderElement, {
   range: {
-    min: 0,
-    max: 1
+    min: EffectsValues.CHROME.MIN,
+    max: EffectsValues.CHROME.MAX
   },
-  start: 1,
-  step: 0.1,
+  start: EffectsValues.CHROME.MAX,
+  step: EffectsValues.CHROME.STEP,
   connect: 'lower'
 });
 
@@ -59,31 +87,51 @@ const applyEffect = () => {
         }
         case 'chrome' : {
           photoEffectContainerElement.classList.remove('hidden');
-          updateSlider(0, 1, 0.1);
+          updateSlider(
+            EffectsValues.CHROME.MIN,
+            EffectsValues.CHROME.MAX,
+            EffectsValues.CHROME.STEP
+          );
           changeEffectLevel('grayscale');
           break;
         }
         case 'sepia' : {
           photoEffectContainerElement.classList.remove('hidden');
-          updateSlider(0, 1, 0.1);
+          updateSlider(
+            EffectsValues.SEPIA.MIN,
+            EffectsValues.SEPIA.MAX,
+            EffectsValues.SEPIA.STEP
+          );
           changeEffectLevel('sepia');
           break;
         }
         case 'marvin' : {
           photoEffectContainerElement.classList.remove('hidden');
-          updateSlider(0, 100, 1);
+          updateSlider(
+            EffectsValues.MARVIN.MIN,
+            EffectsValues.MARVIN.MAX,
+            EffectsValues.MARVIN.STEP
+          );
           changeEffectLevel('invert');
           break;
         }
         case 'phobos' : {
           photoEffectContainerElement.classList.remove('hidden');
-          updateSlider(0, 3, 0.1);
+          updateSlider(
+            EffectsValues.PHOBOS.MIN,
+            EffectsValues.PHOBOS.MAX,
+            EffectsValues.PHOBOS.STEP
+          );
           changeEffectLevel('blur');
           break;
         }
         case 'heat' : {
           photoEffectContainerElement.classList.remove('hidden');
-          updateSlider(1, 3, 0.1);
+          updateSlider(
+            EffectsValues.HEAT.MIN,
+            EffectsValues.HEAT.MAX,
+            EffectsValues.HEAT.STEP
+          );
           changeEffectLevel('brightness');
           break;
         }
