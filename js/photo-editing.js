@@ -2,25 +2,25 @@ const photoEditorModal = document.querySelector('.img-upload__overlay');
 
 const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
 
-const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
+const photoEffectContainerElement = photoEditorModal.querySelector('.img-upload__effect-level');
 const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
-const photoEffectSlider = photoEditorModal.querySelector('.effect-level__slider');
+const photoEffectSliderElement = photoEditorModal.querySelector('.effect-level__slider');
 const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
 
-photoEffectContainer.classList.add('hidden');
+photoEffectContainerElement.classList.add('hidden');
 
-noUiSlider.create(photoEffectSlider, {
+noUiSlider.create(photoEffectSliderElement, {
   range: {
     min: 0,
-    max:  1
+    max: 1
   },
   start: 1,
-  step:0.1,
+  step: 0.1,
   connect: 'lower'
 });
 
 const updateSlider = (minSliderValue, maxSliderValue, sliderStep) => {
-  photoEffectSlider.noUiSlider.updateOptions({
+  photoEffectSliderElement.noUiSlider.updateOptions({
     range: {
       min: minSliderValue,
       max:  maxSliderValue
@@ -32,9 +32,9 @@ const updateSlider = (minSliderValue, maxSliderValue, sliderStep) => {
 };
 
 const changeEffectLevel = (filter) => {
-  photoEffectSlider.noUiSlider.off('update');
-  photoEffectSlider.noUiSlider.on('update', () => {
-    const numericEffectLevel = parseFloat(photoEffectSlider.noUiSlider.get());
+  photoEffectSliderElement.noUiSlider.off('update');
+  photoEffectSliderElement.noUiSlider.on('update', () => {
+    const numericEffectLevel = parseFloat(photoEffectSliderElement.noUiSlider.get());
     photoEffectLevelElement.value = numericEffectLevel;
     if (filter === 'none') {
       photoPreview.style.filter = filter;
@@ -48,42 +48,41 @@ const changeEffectLevel = (filter) => {
   });
 };
 
-
-const adjustEffect = () => {
+const applyEffect = () => {
   for(const effectElement of effectElements) {
     if (effectElement.checked) {
       switch (effectElement.value) {
         case 'none' : {
-          photoEffectContainer.classList.add('hidden');
+          photoEffectContainerElement.classList.add('hidden');
           changeEffectLevel('none');
           break;
         }
         case 'chrome' : {
-          photoEffectContainer.classList.remove('hidden');
+          photoEffectContainerElement.classList.remove('hidden');
           updateSlider(0, 1, 0.1);
           changeEffectLevel('grayscale');
           break;
         }
         case 'sepia' : {
-          photoEffectContainer.classList.remove('hidden');
+          photoEffectContainerElement.classList.remove('hidden');
           updateSlider(0, 1, 0.1);
           changeEffectLevel('sepia');
           break;
         }
         case 'marvin' : {
-          photoEffectContainer.classList.remove('hidden');
+          photoEffectContainerElement.classList.remove('hidden');
           updateSlider(0, 100, 1);
           changeEffectLevel('invert');
           break;
         }
         case 'phobos' : {
-          photoEffectContainer.classList.remove('hidden');
+          photoEffectContainerElement.classList.remove('hidden');
           updateSlider(0, 3, 0.1);
           changeEffectLevel('blur');
           break;
         }
         case 'heat' : {
-          photoEffectContainer.classList.remove('hidden');
+          photoEffectContainerElement.classList.remove('hidden');
           updateSlider(1, 3, 0.1);
           changeEffectLevel('brightness');
           break;
@@ -93,4 +92,4 @@ const adjustEffect = () => {
   }
 };
 
-export {adjustEffect};
+export {applyEffect};

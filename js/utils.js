@@ -5,8 +5,6 @@ const getRandomNumber = (min, max) => {
   return Math.floor(result);
 };
 
-const getArrayItem = (elements) => elements[getRandomNumber(0, elements.length - 1)];
-
 const getUniqueNumbersSet = (min = 0, max = 25, numbersCount = 10) => {
   const numbersSet = new Set();
   while (numbersSet.size < numbersCount) {
@@ -17,23 +15,36 @@ const getUniqueNumbersSet = (min = 0, max = 25, numbersCount = 10) => {
 
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-const showMessage = (message) => {
+const handleMessageAppearance = (message) => {
   document.body.append(message);
-  message.querySelector('button').addEventListener('click', () => {
+
+  const deleteMessage = () => {
     message.remove();
-  });
-  document.addEventListener('click', (evt) => {
+    document.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('keydown', onDocumentKeydown);
+  };
+
+  const onCloseButtonClick = () => {
+    deleteMessage();
+  };
+
+  function onDocumentClick(evt) {
     const isClickInside = message.querySelector('div').contains(evt.target);
     if(!isClickInside) {
-      message.remove();
+      deleteMessage();
     }
-  });
-  document.addEventListener('keydown', (evt) => {
+  }
+
+  function onDocumentKeydown(evt) {
     if(isEscapeKey(evt)) {
       evt.preventDefault();
-      message.remove();
+      deleteMessage();
     }
-  });
+  }
+
+  message.querySelector('button').addEventListener('click', onCloseButtonClick);
+  document.addEventListener('click', onDocumentClick);
+  document.addEventListener('keydown', onDocumentKeydown);
 };
 
 const debounce = (callback, delay) => {
@@ -46,4 +57,4 @@ const debounce = (callback, delay) => {
   };
 };
 
-export {getRandomNumber, getArrayItem, getUniqueNumbersSet, isEscapeKey, showMessage, debounce};
+export {getRandomNumber, getUniqueNumbersSet, isEscapeKey, handleMessageAppearance, debounce};

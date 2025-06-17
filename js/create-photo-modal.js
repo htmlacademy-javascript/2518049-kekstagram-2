@@ -1,3 +1,5 @@
+const COMMENT_COUNT_STEP = 5;
+
 const photoModal = document.querySelector('.big-picture');
 const photoModalImage = photoModal.querySelector('.big-picture__img').querySelector('img');
 const photoModalCaption = photoModal.querySelector('.social__caption');
@@ -11,7 +13,6 @@ const commentFragment = document.createDocumentFragment();
 
 const commentsLoader = photoModal.querySelector('.comments-loader');
 
-const COMMENT_COUNT_STEP = 5;
 let commentsArray = [];
 let commentsCount = 5;
 

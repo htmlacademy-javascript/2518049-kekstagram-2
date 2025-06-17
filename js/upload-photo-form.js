@@ -1,27 +1,7 @@
 import { closeFormModal, openFormModal } from './toggle-form-modal';
-import { isEscapeKey } from './utils';
-import { adjustEffect } from './photo-editing';
+import { isEscapeKey, handleMessageAppearance } from './utils';
+import { applyEffect } from './photo-editing';
 import { sendData } from './api';
-
-const pageBody = document.querySelector('body');
-
-const photoUploadForm = document.querySelector('.img-upload__form');
-const photoUploadElement = document.querySelector('.img-upload__input');
-const photoEditorModal = document.querySelector('.img-upload__overlay');
-const photoEditorModalCloseButton = photoEditorModal.querySelector('.img-upload__cancel');
-
-const photoHashtags = photoUploadForm.querySelector('.text__hashtags');
-const photoDescription = photoUploadForm.querySelector('.text__description');
-
-const photoScaleSmaller = photoEditorModal.querySelector('.scale__control--smaller');
-const photoScaleBigger = photoEditorModal.querySelector('.scale__control--bigger');
-const photoScaleValue = photoEditorModal.querySelector('.scale__control--value');
-let photoScaleNumericValue = parseInt(photoScaleValue.value.replace('%', ''), 10);
-const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
-const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
-const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
-const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
-const nonEffectElement = photoEditorModal.querySelector('#effect-none');
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -29,7 +9,54 @@ const MAX_SCALE = 100;
 const MIN_SCALE = 25;
 const SCALE_STEP = 25;
 
+const pageBody = document.querySelector('body');
+
+const photoUploadForm = document.querySelector('.img-upload__form');
+const photoUploadInput = document.querySelector('.img-upload__input');
+const photoEditorModal = document.querySelector('.img-upload__overlay');
+const photoEditorModalCloseButton = photoEditorModal.querySelector('.img-upload__cancel');
+const photoSubmitButton = photoEditorModal.querySelector('.img-upload__submit');
+
+const photoScaleSmaller = photoEditorModal.querySelector('.scale__control--smaller');
+const photoScaleBigger = photoEditorModal.querySelector('.scale__control--bigger');
+const photoScaleValue = photoEditorModal.querySelector('.scale__control--value');
+const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
+const photoEffectContainerElement = photoEditorModal.querySelector('.img-upload__effect-level');
+const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
+const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
+const nonEffectElement = photoEditorModal.querySelector('#effect-none');
+
+const photoHashtags = photoUploadForm.querySelector('.text__hashtags');
+const photoDescription = photoUploadForm.querySelector('.text__description');
+
+const errorBlock = document.querySelector('#error').content.querySelector('.error');
+
+let photoScaleNumericValue = parseInt(photoScaleValue.value.replace('%', ''), 10);
 let errorMessage;
+
+photoScaleSmaller.addEventListener('click', () => {
+  if (photoScaleNumericValue > MIN_SCALE) {
+    photoScaleNumericValue -= SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
+  }
+});
+
+photoScaleBigger.addEventListener('click', () => {
+  if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP < MAX_SCALE - photoScaleNumericValue) {
+    photoScaleNumericValue += SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
+  } else if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP >= MAX_SCALE - photoScaleNumericValue) {
+    photoScaleNumericValue += SCALE_STEP;
+    photoScaleValue.value = `${photoScaleNumericValue}%`;
+    photoPreview.style.transform = 'scale(1)';
+  }
+});
+
+effectElements.forEach((element) => {
+  element.addEventListener('change', applyEffect);
+});
 
 const pristine = new Pristine(photoUploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -78,32 +105,18 @@ pristine.addValidator(photoHashtags, validateHashtags, () => errorMessage);
 const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 pristine.addValidator(photoDescription, validateComment, `Нельзя вводить больше ${MAX_COMMENT_LENGTH} символов`);
 
-effectElements.forEach((element) => {
-  element.addEventListener('change', adjustEffect);
-});
+const blockSubmitButton = () => {
+  photoSubmitButton.disabled = true;
+  photoSubmitButton.textContent = 'Публикуется';
+};
 
-photoScaleSmaller.addEventListener('click', () => {
-  if (photoScaleNumericValue > MIN_SCALE) {
-    photoScaleNumericValue -= SCALE_STEP;
-    photoScaleValue.value = `${photoScaleNumericValue}%`;
-    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
-  }
-});
-
-photoScaleBigger.addEventListener('click', () => {
-  if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP < MAX_SCALE - photoScaleNumericValue) {
-    photoScaleNumericValue += SCALE_STEP;
-    photoScaleValue.value = `${photoScaleNumericValue}%`;
-    photoPreview.style.transform = `scale(0.${photoScaleNumericValue})`;
-  } else if (photoScaleNumericValue < MAX_SCALE && SCALE_STEP >= MAX_SCALE - photoScaleNumericValue) {
-    photoScaleNumericValue += SCALE_STEP;
-    photoScaleValue.value = `${photoScaleNumericValue}%`;
-    photoPreview.style.transform = 'scale(1)';
-  }
-});
+const unblockSubmitButton = () => {
+  photoSubmitButton.disabled = false;
+  photoSubmitButton.textContent = 'Опубликовать';
+};
 
 const resetForm = () => {
-  photoUploadElement.value = '';
+  photoUploadInput.value = '';
   photoHashtags.value = '';
   photoDescription.value = '';
 
@@ -111,7 +124,7 @@ const resetForm = () => {
   photoScaleValue.value = '100%';
   photoPreview.style.transform = 'scale(1)';
 
-  photoEffectContainer.classList.add('hidden');
+  photoEffectContainerElement.classList.add('hidden');
   photoEffectLevelElement.value = '';
   photoPreview.style.filter = 'none';
   nonEffectElement.checked = true;
@@ -133,7 +146,7 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
-photoUploadElement.addEventListener('change', () => {
+photoUploadInput.addEventListener('change', () => {
   openFormModal(onDocumentKeydown);
 });
 
@@ -145,10 +158,17 @@ const setPhotoFormSubmit = () => {
   photoUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     if(pristine.validate()) {
+      blockSubmitButton();
       sendData(new FormData(evt.target))
         .then(() => {
           closeFormModal(resetForm, onDocumentKeydown);
-        });
+        })
+        .catch(
+          () => handleMessageAppearance(errorBlock)
+        )
+        .finally(
+          unblockSubmitButton
+        );
     }
   });
 };
