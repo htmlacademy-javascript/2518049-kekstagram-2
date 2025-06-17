@@ -8,7 +8,7 @@ fileInput.addEventListener('change', () => {
   const file = fileInput.files[0];
   const fileName = file.name.toLowerCase();
 
-  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  const matches = FILE_TYPES.some((type) => fileName.endsWith(type));
 
   if(matches) {
     photoPreview.src = URL.createObjectURL(file);

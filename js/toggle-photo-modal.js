@@ -18,7 +18,6 @@ const onDocumentKeydown = (evt) => {
 const openPhotoModal = () => {
   photoModal.classList.remove('hidden');
   pageBody.classList.add('modal-open');
-
   document.addEventListener('keydown', onDocumentKeydown);
 };
 
@@ -26,7 +25,6 @@ const closePhotoModal = () => {
   clearPreviousComments();
   photoModal.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-
   document.removeEventListener('keydown', onDocumentKeydown);
 };
 

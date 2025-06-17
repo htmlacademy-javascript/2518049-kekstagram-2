@@ -1,26 +1,54 @@
+const EffectsValues = {
+  CHROME: {
+    MIN: 0,
+    MAX: 1,
+    STEP: 0.1
+  },
+  SEPIA: {
+    MIN: 0,
+    MAX: 1,
+    STEP: 0.1
+  },
+  MARVIN: {
+    MIN: 0,
+    MAX: 100,
+    STEP: 1
+  },
+  PHOBOS: {
+    MIN: 0,
+    MAX: 3,
+    STEP: 0.1
+  },
+  HEAT: {
+    MIN: 1,
+    MAX: 3,
+    STEP: 0.1
+  },
+};
+
 const photoEditorModal = document.querySelector('.img-upload__overlay');
 
 const photoPreview = photoEditorModal.querySelector('.img-upload__preview').querySelector('img');
 
-const photoEffectContainer = photoEditorModal.querySelector('.img-upload__effect-level');
+const photoEffectContainerElement = photoEditorModal.querySelector('.img-upload__effect-level');
 const photoEffectLevelElement = photoEditorModal.querySelector('.effect-level__value');
-const photoEffectSlider = photoEditorModal.querySelector('.effect-level__slider');
+const photoEffectSliderElement = photoEditorModal.querySelector('.effect-level__slider');
 const effectElements = photoEditorModal.querySelectorAll('.effects__radio');
 
-photoEffectContainer.classList.add('hidden');
+photoEffectContainerElement.classList.add('hidden');
 
-noUiSlider.create(photoEffectSlider, {
+noUiSlider.create(photoEffectSliderElement, {
   range: {
-    min: 0,
-    max:  1
+    min: EffectsValues.CHROME.MIN,
+    max: EffectsValues.CHROME.MAX
   },
-  start: 1,
-  step:0.1,
+  start: EffectsValues.CHROME.MAX,
+  step: EffectsValues.CHROME.STEP,
   connect: 'lower'
 });
 
 const updateSlider = (minSliderValue, maxSliderValue, sliderStep) => {
-  photoEffectSlider.noUiSlider.updateOptions({
+  photoEffectSliderElement.noUiSlider.updateOptions({
     range: {
       min: minSliderValue,
       max:  maxSliderValue
@@ -32,9 +60,9 @@ const updateSlider = (minSliderValue, maxSliderValue, sliderStep) => {
 };
 
 const changeEffectLevel = (filter) => {
-  photoEffectSlider.noUiSlider.off('update');
-  photoEffectSlider.noUiSlider.on('update', () => {
-    const numericEffectLevel = parseFloat(photoEffectSlider.noUiSlider.get());
+  photoEffectSliderElement.noUiSlider.off('update');
+  photoEffectSliderElement.noUiSlider.on('update', () => {
+    const numericEffectLevel = parseFloat(photoEffectSliderElement.noUiSlider.get());
     photoEffectLevelElement.value = numericEffectLevel;
     if (filter === 'none') {
       photoPreview.style.filter = filter;
@@ -48,43 +76,62 @@ const changeEffectLevel = (filter) => {
   });
 };
 
-
-const adjustEffect = () => {
+const applyEffect = () => {
   for(const effectElement of effectElements) {
     if (effectElement.checked) {
       switch (effectElement.value) {
         case 'none' : {
-          photoEffectContainer.classList.add('hidden');
+          photoEffectContainerElement.classList.add('hidden');
           changeEffectLevel('none');
           break;
         }
         case 'chrome' : {
-          photoEffectContainer.classList.remove('hidden');
-          updateSlider(0, 1, 0.1);
+          photoEffectContainerElement.classList.remove('hidden');
+          updateSlider(
+            EffectsValues.CHROME.MIN,
+            EffectsValues.CHROME.MAX,
+            EffectsValues.CHROME.STEP
+          );
           changeEffectLevel('grayscale');
           break;
         }
         case 'sepia' : {
-          photoEffectContainer.classList.remove('hidden');
-          updateSlider(0, 1, 0.1);
+          photoEffectContainerElement.classList.remove('hidden');
+          updateSlider(
+            EffectsValues.SEPIA.MIN,
+            EffectsValues.SEPIA.MAX,
+            EffectsValues.SEPIA.STEP
+          );
           changeEffectLevel('sepia');
           break;
         }
         case 'marvin' : {
-          photoEffectContainer.classList.remove('hidden');
-          updateSlider(0, 100, 1);
+          photoEffectContainerElement.classList.remove('hidden');
+          updateSlider(
+            EffectsValues.MARVIN.MIN,
+            EffectsValues.MARVIN.MAX,
+            EffectsValues.MARVIN.STEP
+          );
           changeEffectLevel('invert');
           break;
         }
         case 'phobos' : {
-          photoEffectContainer.classList.remove('hidden');
-          updateSlider(0, 3, 0.1);
+          photoEffectContainerElement.classList.remove('hidden');
+          updateSlider(
+            EffectsValues.PHOBOS.MIN,
+            EffectsValues.PHOBOS.MAX,
+            EffectsValues.PHOBOS.STEP
+          );
           changeEffectLevel('blur');
           break;
         }
         case 'heat' : {
-          photoEffectContainer.classList.remove('hidden');
-          updateSlider(1, 3, 0.1);
+          photoEffectContainerElement.classList.remove('hidden');
+          updateSlider(
+            EffectsValues.HEAT.MIN,
+            EffectsValues.HEAT.MAX,
+            EffectsValues.HEAT.STEP
+          );
           changeEffectLevel('brightness');
           break;
         }
@@ -93,4 +140,4 @@ const adjustEffect = () => {
   }
 };
 
-export {adjustEffect};
+export {applyEffect};

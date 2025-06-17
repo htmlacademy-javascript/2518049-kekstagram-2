@@ -1,3 +1,6 @@
+const INITIAL_COMMENTS_COUNT = 5;
+const COMMENT_COUNT_STEP = 5;
+
 const photoModal = document.querySelector('.big-picture');
 const photoModalImage = photoModal.querySelector('.big-picture__img').querySelector('img');
 const photoModalCaption = photoModal.querySelector('.social__caption');
@@ -11,9 +14,8 @@ const commentFragment = document.createDocumentFragment();
 
 const commentsLoader = photoModal.querySelector('.comments-loader');
 
-const COMMENT_COUNT_STEP = 5;
 let commentsArray = [];
-let commentsCount = 5;
+let commentsCount = INITIAL_COMMENTS_COUNT;
 
 const showCurrentComments = (comments, currentCommentsCount) => {
   comments.slice(0, currentCommentsCount).forEach((comment) => {
@@ -30,7 +32,7 @@ const showCurrentComments = (comments, currentCommentsCount) => {
 
 const showNextComments = () => {
   const hiddenCommentsCount = commentsArray.length - commentsCount;
-  if(hiddenCommentsCount <= 5) {
+  if(hiddenCommentsCount <= COMMENT_COUNT_STEP) {
     commentsCount += hiddenCommentsCount;
     photoModalCommentsShown.textContent = commentsCount;
     commentsLoader.classList.add('hidden');
@@ -42,7 +44,7 @@ const showNextComments = () => {
 };
 
 const clearPreviousComments = () => {
-  commentsCount = 5;
+  commentsCount = INITIAL_COMMENTS_COUNT;
   commentsArray = [];
   commentBlock.innerHTML = '';
   commentsLoader.removeEventListener('click', showNextComments);
@@ -53,11 +55,11 @@ const createPhotoModal = (url, description, likes, comments) => {
   photoModalCaption.textContent = description;
   photoModalLikesCount.textContent = likes;
   photoModalCommentsTotal.textContent = comments.length;
-  if(comments.length <= 5) {
+  if(comments.length <= INITIAL_COMMENTS_COUNT) {
     photoModalCommentsShown.textContent = comments.length;
     commentsLoader.classList.add('hidden');
   } else {
-    photoModalCommentsShown.textContent = 5;
+    photoModalCommentsShown.textContent = INITIAL_COMMENTS_COUNT;
     commentsLoader.classList.remove('hidden');
     commentsLoader.addEventListener('click', showNextComments);
   }

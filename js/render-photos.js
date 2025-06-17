@@ -6,19 +6,18 @@ const photoTemplate = document.querySelector('#picture').content.querySelector('
 const photoListFragment = document.createDocumentFragment();
 
 const renderPhotos = (photos) => {
-  photos
-    .forEach(({url, description, likes, comments}) => {
-      const newPhoto = photoTemplate.cloneNode(true);
-      newPhoto.querySelector('.picture__img').src = url;
-      newPhoto.querySelector('.picture__img').alt = description;
-      newPhoto.querySelector('.picture__likes').textContent = likes;
-      newPhoto.querySelector('.picture__comments').textContent = comments.length;
-      newPhoto.addEventListener('click', () => {
-        createPhotoModal(url, description, likes, comments);
-        openPhotoModal();
-      });
-      photoListFragment.appendChild(newPhoto);
+  photos?.forEach(({url, description, likes, comments}) => {
+    const newPhoto = photoTemplate.cloneNode(true);
+    newPhoto.querySelector('.picture__img').src = url;
+    newPhoto.querySelector('.picture__img').alt = description;
+    newPhoto.querySelector('.picture__likes').textContent = likes;
+    newPhoto.querySelector('.picture__comments').textContent = comments.length;
+    newPhoto.addEventListener('click', () => {
+      createPhotoModal(url, description, likes, comments);
+      openPhotoModal();
     });
+    photoListFragment.appendChild(newPhoto);
+  });
   photoBlock.querySelectorAll('.picture').forEach((picture) => picture.remove());
   photoBlock.appendChild(photoListFragment);
 };
