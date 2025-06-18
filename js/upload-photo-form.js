@@ -1,8 +1,9 @@
 import { closeFormModal, openFormModal } from './toggle-form-modal';
 import { isEscapeKey, handleMessageAppearance } from './utils';
-import { applyEffect } from './photo-editing';
+import { onPhotoEffectApply } from './photo-editing';
 import { sendData } from './api';
 
+const HASHTAG_TEMPLATE = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
 const MAX_TRASFORM_SCALE = 1;
@@ -56,7 +57,7 @@ photoScaleBigger.addEventListener('click', () => {
 });
 
 effectElements.forEach((element) => {
-  element.addEventListener('change', applyEffect);
+  element.addEventListener('change', onPhotoEffectApply);
 });
 
 const pristine = new Pristine(photoUploadForm, {
@@ -66,7 +67,6 @@ const pristine = new Pristine(photoUploadForm, {
 });
 
 const validateHashtags = (value) => {
-  const hashtagTemplate = /^#[a-zа-яё0-9]{1,19}$/i;
   const inputValue = value.toLowerCase().trim();
   const hashtagsArray = inputValue.split(/\s+/);
   const correctLength = hashtagsArray.length <= MAX_HASHTAG_COUNT;
@@ -88,7 +88,7 @@ const validateHashtags = (value) => {
     } else if (hashtag.slice(1).includes('#')) {
       errorMessage = 'Хэштеги разделяются пробелами';
       return false;
-    } else if (!hashtagTemplate.test(hashtag)) {
+    } else if (!HASHTAG_TEMPLATE.test(hashtag)) {
       errorMessage = 'Хэштег должен начинаться с # и содержать до 19 букв или цифр';
       return false;
     }

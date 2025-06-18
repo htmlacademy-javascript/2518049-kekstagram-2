@@ -76,7 +76,7 @@ const changeEffectLevel = (filter) => {
   });
 };
 
-const applyEffect = () => {
+const onPhotoEffectApply = () => {
   for(const effectElement of effectElements) {
     if (effectElement.checked) {
       switch (effectElement.value) {
@@ -140,4 +140,4 @@ const applyEffect = () => {
   }
 };
 
-export {applyEffect};
+export {onPhotoEffectApply};
