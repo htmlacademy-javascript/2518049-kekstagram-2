@@ -30,7 +30,7 @@ const showCurrentComments = (comments, currentCommentsCount) => {
   commentBlock.appendChild(commentFragment);
 };
 
-const showNextComments = () => {
+const onNextCommentsShow = () => {
   const hiddenCommentsCount = commentsArray.length - commentsCount;
   if(hiddenCommentsCount <= COMMENT_COUNT_STEP) {
     commentsCount += hiddenCommentsCount;
@@ -47,7 +47,7 @@ const clearPreviousComments = () => {
   commentsCount = INITIAL_COMMENTS_COUNT;
   commentsArray = [];
   commentBlock.innerHTML = '';
-  commentsLoader.removeEventListener('click', showNextComments);
+  commentsLoader.removeEventListener('click', onNextCommentsShow);
 };
 
 const createPhotoModal = (url, description, likes, comments) => {
@@ -61,7 +61,7 @@ const createPhotoModal = (url, description, likes, comments) => {
   } else {
     photoModalCommentsShown.textContent = INITIAL_COMMENTS_COUNT;
     commentsLoader.classList.remove('hidden');
-    commentsLoader.addEventListener('click', showNextComments);
+    commentsLoader.addEventListener('click', onNextCommentsShow);
   }
   commentsArray = comments;
   showCurrentComments(commentsArray, commentsCount);
